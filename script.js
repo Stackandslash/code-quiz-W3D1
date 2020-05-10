@@ -1,44 +1,30 @@
 var beginEl = document.getElementById("begin");
 var questionEl = document.getElementById("question");
+var holderEl = document.querySelector("#holder");
 var timer = 0;
 var qNumber = 0;
 
 var questions = [
     {
         q : "When smurgle, how many murgle?",
+        answers : ["1","2","3","Burgle"],
+        correct : ["Burgle"]
+    },
+    {
+        q : "When smurgle, how many murgle?",
         answers : ["1","2","3","Burgle"]
     },
     {
-        q : "How much?",
-        a1 : "Not enough",
-        ac : "Just enough",
-        a2 : "More than enough",
-        a3 : "Too much"
-
+        q : "When smurgle, how many murgle?",
+        answers : ["1","2","3","Burgle"]
     },
     {
-        q : "How much?",
-        a1 : "Not enough",
-        ac : "Just enough",
-        a2 : "More than enough",
-        a3 : "Too much"
-
+        q : "When smurgle, how many murgle?",
+        answers : ["1","2","3","Burgle"]
     },
     {
-        q : "How much?",
-        a1 : "Not enough",
-        ac : "Just enough",
-        a2 : "More than enough",
-        a3 : "Too much"
-
-    },
-    {
-        q : "How much?",
-        a1 : "Not enough",
-        ac : "Just enough",
-        a2 : "More than enough",
-        a3 : "Too much"
-
+        q : "When smurgle, how many murgle?",
+        answers : ["1","2","3","Burgle"]
     }
 ]
 
@@ -50,34 +36,42 @@ beginEl.addEventListener("click", function() {
     timerStart();
     renderQuestions(qNumber);
     beginEl.style.display = "none";
+    intro.style.display = "none";
   });
 // - Hide the button
 // - Call TIMERSTART FUNCTION
 // -- Call RENDERQUESTIONS
 
-
-
+holderEl.addEventListener("click", function(){
+    if (event.target.matches("button")) {
+        console.log("You clicked a button");
+        
+    }
+});
 
 // -- On button click in the defined area
-// -- IF user clicks the button containing ac (should we assign an ID temporarily?)
-// --- +1 to qnumber
+// -- IF user has clicked a button, 
+// -- IF user clicks the button containing answer (event.target.textContent == questions.qNumber.answer)
+// --- +1 to qnumber, Call RENDERQUESTIONS.
 // -- ELSE timer = timer - 10.
-// -- Once qnumber hits 6, call the gameover function 
 
 
 // -- RENDERQUESTIONS FUNCTION
+// -- IF qnumber hits 6, call the gameover function and RETURN 
 // -- Populate questionEl with questions[i].q
 // -- Populate answerEl1 to 4 with a1,2,3, and c.
-// -- Assign the associated IDs to indicate correct and incorrect questions.
+// -- We're just going to use event.target.textContent outside the function to handle answers.
 function renderQuestions(qNumberLocal){
+    if (qNumber == 6){
+        gameOver();
+        return;
+    }
     {
         questionEl.textContent = questions[qNumberLocal].q;
         for (var i = 0; i < 4; i++) {
-            var numeral = i+1;
             var button = document.createElement("button");
             button.textContent = questions[qNumberLocal].answers[i];
-            button.id = toString(numeral);
-            document.body.append(button);
+            holderEl.append(button);
           }
     }
 }
