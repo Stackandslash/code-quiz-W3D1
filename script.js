@@ -3,6 +3,8 @@ var questionEl = document.getElementById("question");
 var holderEl = document.querySelector("#holder");
 var timer = 0;
 var qNumber = 0;
+var score = 0;
+var gameOverVar = 0;
 
 var questions = [
     {
@@ -32,14 +34,21 @@ var questions = [
     },
 ]
 
-//Define questions, and timer var
+//Define questions, elements, timer and question number var, retrieve and store high score info.
+var highScoreList = JSON.parse(localStorage.getItem("highscore"));
+var timeTextEl = document.createElement("h3");
+timeTextEl.textContent = "Timer: 0";
+timeTextEl.style.position = "absolute";
+timeTextEl.style.top = "10px";
+timeTextEl.style.right = "10%";
+
 
 // Start button hit 
 beginEl.addEventListener("click", function() {
     timerStart();
     renderQuestions();
     beginEl.style.display = "none";
-    intro.style.display = "none";
+    intro.style.textContent = "";
   });
 // - Hide the button and intro.
 // - Call TIMERSTART FUNCTION
@@ -52,7 +61,7 @@ holderEl.addEventListener("click", function(event){
             qNumber ++;
             console.log(qNumber);
             renderQuestions();
-        }
+        }        
         else{
             timer = (timer - 10);
         }
@@ -96,22 +105,15 @@ function renderQuestions(){
 // -- each second, decrement timer, on screen and internal.
 // -- if timer has hit zero or below(because -10 can drive it below 0), call gameover function
 function timerStart(){
-    var timeTextEl = document.createElement("h3");
-    timeTextEl.textContent = "Timer: 0";
-    timeTextEl.style.position = "absolute";
-    timeTextEl.style.top = "10px";
-    timeTextEl.style.right = "10%";
     holderEl.append(timeTextEl);
     timer = 75;
     
     var timeInterval = setInterval(function() {
     timeTextEl.textContent = "Timer: " + timer;
     timer--;
-
     if (timer <= 0) {
-      timeTextEl.style.display = "none";
-        gameOver();
-      clearInterval(timeInterval);
+    clearInterval(timeInterval);
+    gameOver(); //If the player reaches game over with correct answers, this will still eventually fire and prompt an error. So we hack a flag onto that.
     }
 
   }, 1000);
@@ -122,16 +124,24 @@ function timerStart(){
 
 // --- GAMEOVER FUNCTION
 // --- Hide all the quiz elements
-// --- Display the final score
+// --- Save and display the final score
 // --- Let user enter initials
 // --- Add initials and score to list in storage
 // --- Call HIGHSCORE FUNCTION
 function gameOver(){
-    questionEl.style.display = "none";
+    if (gameOverVar == 1){
+        return;
+    }
+    gameOverVar = 1;
+    score = timer;
+    timeTextEl.style.display = "none";
     for (var i = 0; i < 4; i++) {
         var oldButton = document.getElementById(i);
         oldButton.remove();
     }
+
+    questionEl.textContent = "Game Over!";
+    intro.textContent = "Your score is: " + score;
 }
 
 
@@ -140,3 +150,21 @@ function gameOver(){
 // ---- Display options to go back to start or clear.
 // -----On Click of Go Back, refresh the page, or do everything manually.
 // -----On Click of Clear, overwrite the local storage list with a blank, then call this function again?
+
+function highScore(){
+    var timeTextEl = document.createElement("ol");
+    // New li for each score
+    for (var i = 0; i < todos.length; i++) {
+      var todo = todos[i];
+  
+      var li = document.createElement("li");
+      li.textContent = todo;
+      li.setAttribute("data-index", i);
+  
+      var button = document.createElement("button");
+      button.textContent = "Complete";
+  
+      li.appendChild(button);
+      todoList.appendChild(li);
+    }
+  }
