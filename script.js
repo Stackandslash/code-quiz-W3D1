@@ -5,6 +5,7 @@ var timer = 0;
 var qNumber = 0;
 var score = 0;
 var gameOverVar = 0;
+var highScoreLocal = [];
 
 var questions = [
     {
@@ -35,13 +36,18 @@ var questions = [
 ]
 
 //Define questions, elements, timer and question number var, retrieve and store high score info.
-var highScoreList = JSON.parse(localStorage.getItem("highscore"));
 var timeTextEl = document.createElement("h3");
 timeTextEl.textContent = "Timer: 0";
 timeTextEl.style.position = "absolute";
 timeTextEl.style.top = "10px";
 timeTextEl.style.right = "10%";
 
+if(localStorage.getItem("highscore")){
+    highScoreLocal = JSON.parse(localStorage.getItem("highscore"))
+}
+else{
+    highScoreLocal = [];
+}
 
 // Start button hit 
 beginEl.addEventListener("click", function() {
@@ -55,14 +61,24 @@ beginEl.addEventListener("click", function() {
 // -- Call RENDERQUESTIONS
 
 holderEl.addEventListener("click", function(event){
-    if (event.target.matches("button")) {
-        if (event.target.textContent == questions[qNumber].correct){
+    if (event.target.matches("button")) 
+    console.log(event.target.id);
+    {
+        if (qNumber < 5 && event.target.textContent == questions[qNumber].correct){
             console.log("That's right");
             qNumber ++;
             console.log(qNumber);
             renderQuestions();
-        }        
-        else{
+        }   
+        else if (event.target.id == "resetHS"){
+            highScoreWipe();
+        }   
+
+        else if (event.target.id == "refresh"){
+            location.reload();
+        }   
+
+        else if (event.target.id == "1" || event.target.id == "2" || event.target.id == "3" || event.target.id == "4"){
             timer = (timer - 10);
         }
     }
@@ -142,6 +158,26 @@ function gameOver(){
 
     questionEl.textContent = "Game Over!";
     intro.textContent = "Your score is: " + score;
+
+    var HSEntryForm = document.createElement("form");
+    holderEl.appendChild(HSEntryForm);
+    var HSEntryBox = document.createElement("input");
+    HSEntryBox.type = "text";
+    HSEntryBox.placeholder = "Enter your Name";
+    HSEntryBox.id = "HSEntryBoxID";
+    HSEntryForm.appendChild(HSEntryBox);
+    var theText = document.querySelector("#HSEntryBoxID");
+    HSEntryForm.addEventListener("submit", function(event){
+        event.preventDefault();
+        console.log(theText.value);
+        var finalString = theText.value.trim() + " - Score: " + score;
+        console.log(finalString);
+        highScoreLocal.push(finalString);
+        localStorage.setItem("highscore", JSON.stringify(highScoreLocal));
+        HSEntryForm.remove();
+        intro.textContent = "";
+        highScore();
+    })
 }
 
 
@@ -152,19 +188,44 @@ function gameOver(){
 // -----On Click of Clear, overwrite the local storage list with a blank, then call this function again?
 
 function highScore(){
-    var timeTextEl = document.createElement("ol");
-    // New li for each score
-    for (var i = 0; i < todos.length; i++) {
-      var todo = todos[i];
-  
-      var li = document.createElement("li");
-      li.textContent = todo;
-      li.setAttribute("data-index", i);
-  
-      var button = document.createElement("button");
-      button.textContent = "Complete";
-  
-      li.appendChild(button);
-      todoList.appendChild(li);
+    questionEl.textContent = "High Scores";
+    var highScoreList = document.createElement("ol");
+    highScoreList.id = "highscorelist";
+    holderEl.appendChild(highScoreList);
+    console.log(highScoreLocal);
+    // New li for each score. If no score (user avoided entering any), placeholder message.
+    if(highScoreLocal.length == 0){
+        var entry = document.createElement("li");
+        entry.textContent = "You could be here!"
+        highScoreList.appendChild(entry);
     }
+        for (var i = 0; i < highScoreLocal.length; i++){
+        var entry = document.createElement("li");
+        entry.textContent = highScoreLocal[i];
+        highScoreList.appendChild(entry);
+        }
+    var resetButtonEl = document.createElement("button");
+    resetButtonEl.textContent = "Clear Data";
+    resetButtonEl.id = "resetHS";
+    holderEl.appendChild(resetButtonEl);
+    var refreshButtonEl = document.createElement("button");
+    refreshButtonEl.textContent = "Restart";
+    refreshButtonEl.id = "refresh";
+    holderEl.appendChild(refreshButtonEl);
+  }
+
+  //-- If you need to wipe the scores, this keeps the screen clean.
+
+  function highScoreWipe(){
+    console.log("Resetting High Scores");
+    localStorage.setItem("highscore", "");
+    highScoreLocal = [];
+    var deleter = document.getElementById("resetHS");
+    deleter.remove();
+    deleter = document.getElementById("refresh");
+    deleter.remove();
+    deleter = document.getElementById("highscorelist"); //not a button.
+    deleter.remove();
+
+    highScore();
   }
