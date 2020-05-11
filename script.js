@@ -54,7 +54,7 @@ beginEl.addEventListener("click", function() {
     timerStart();
     renderQuestions();
     beginEl.style.display = "none";
-    intro.style.textContent = "";
+    intro.textContent = "";
   });
 // - Hide the button and intro.
 // - Call TIMERSTART FUNCTION
@@ -111,6 +111,9 @@ function renderQuestions(){
             var button = document.createElement("button");
             button.textContent = questions[qNumber].answers[i];
             button.id = i;
+            button.classList.add("btn");
+            button.classList.add("btn-secondary");
+            button.classList.add("mx-3")
             holderEl.append(button);
           }
     }
@@ -193,7 +196,7 @@ function highScore(){
     highScoreList.id = "highscorelist";
     holderEl.appendChild(highScoreList);
     console.log(highScoreLocal);
-    // New li for each score. If no score (user avoided entering any), placeholder message.
+    // New li for each score. If no score (user avoided entering any/erased), placeholder message.
     if(highScoreLocal.length == 0){
         var entry = document.createElement("li");
         entry.textContent = "You could be here!"
