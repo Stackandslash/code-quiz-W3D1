@@ -9,29 +9,29 @@ var highScoreLocal = [];
 
 var questions = [
     {
-        q : "When smurgle, how many murgle?",
-        answers : ["1","2","3","Burgle"],
-        correct : ["Burgle"]
+        q : "Which of these is not a way to store variables?",
+        answers : ["Array","Object","String","Element"],
+        correct : ["Element"]
     },
     {
-        q : "When smurgle, how many murgle?",
-        answers : ["2","2","2","Burgle"],
-        correct : ["Burgle"]
+        q : "Which of the following should go around the the paramaters of a function?",
+        answers : ["Parenthesis","Square Bracket","Curly Brace","Quotation Mark"],
+        correct : ["Parenthesis"]
     },
     {
-        q : "When smurgle, how many murgle?",
-        answers : ["3","3","3","Burgle"],
-        correct : ["Burgle"]
+        q : "where does an array's index start?",
+        answers : ["0","1","#start","A"],
+        correct : ["0"]
     },
     {
-        q : "When smurgle, how many murgle?",
-        answers : ["4","4","4","Burgle"],
-        correct : ["Burgle"]
+        q : "When should you use eval()?",
+        answers : ["Everywhere","To solve equations","To find values","Never - user something else"],
+        correct : ["Never - user something else"]
     },
     {
-        q : "When smurgle, how many murgle?",
-        answers : ["5","5","5","Burgle"],
-        correct : ["Burgle"]
+        q : "How smart are computers?",
+        answers : ["They know nothing","They will take over the world.","Depends on the specs","As smart as you make them"],
+        correct : ["As smart as you make them"]
     },
 ]
 
@@ -40,7 +40,7 @@ var timeTextEl = document.createElement("h3");
 timeTextEl.textContent = "Timer: 0";
 timeTextEl.style.position = "absolute";
 timeTextEl.style.top = "10px";
-timeTextEl.style.right = "10%";
+timeTextEl.style.right = "15%";
 
 if(localStorage.getItem("highscore")){
     highScoreLocal = JSON.parse(localStorage.getItem("highscore"))
@@ -111,9 +111,7 @@ function renderQuestions(){
             var button = document.createElement("button");
             button.textContent = questions[qNumber].answers[i];
             button.id = i;
-            button.classList.add("btn");
-            button.classList.add("btn-secondary");
-            button.classList.add("mx-3")
+            button.setAttribute("class", "btn btn-secondary mx-3");
             holderEl.append(button);
           }
     }
@@ -172,9 +170,7 @@ function gameOver(){
     var theText = document.querySelector("#HSEntryBoxID");
     HSEntryForm.addEventListener("submit", function(event){
         event.preventDefault();
-        console.log(theText.value);
         var finalString = theText.value.trim() + " - Score: " + score;
-        console.log(finalString);
         highScoreLocal.push(finalString);
         localStorage.setItem("highscore", JSON.stringify(highScoreLocal));
         HSEntryForm.remove();
@@ -210,10 +206,12 @@ function highScore(){
     var resetButtonEl = document.createElement("button");
     resetButtonEl.textContent = "Clear Data";
     resetButtonEl.id = "resetHS";
+    resetButtonEl.setAttribute("class", "btn btn-secondary mx-3");
     holderEl.appendChild(resetButtonEl);
     var refreshButtonEl = document.createElement("button");
     refreshButtonEl.textContent = "Restart";
     refreshButtonEl.id = "refresh";
+    refreshButtonEl.setAttribute("class", "btn btn-secondary mx-3");
     holderEl.appendChild(refreshButtonEl);
   }
 
